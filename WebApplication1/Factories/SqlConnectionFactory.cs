@@ -14,7 +14,7 @@ namespace HrApi.Factories
 
         public async Task<SqlConnection> GetDefaultConnection()
         {
-            var connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            SqlConnection connection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             await connection.OpenAsync();
             return connection;
         }

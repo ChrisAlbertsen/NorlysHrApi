@@ -10,9 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-// Register EmployeeCrudService
-builder.Services.AddTransient<IEmployeeCrudService, EmployeeCrudService>();
-builder.Services.AddTransient<ISqlConnectionFactory, SqlConnectionFactory>();
+// Register EmployeeService
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<ISqlConnectionFactory, SqlConnectionFactory>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
