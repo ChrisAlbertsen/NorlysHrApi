@@ -15,7 +15,7 @@ public static class ExceptionHandlingExtension
             var exception = exceptionDetails?.Error;
 
             logger.LogError(exception,
-                "Request could not process on machine: {Machine}. TradeId: {TradeId}",
+                "Request could not process on machine: {Machine}. TraceId: {TraceId}",
                 Environment.MachineName,
                 Activity.Current?.Id);
 
@@ -24,7 +24,7 @@ public static class ExceptionHandlingExtension
                 statusCode: StatusCodes.Status500InternalServerError,
                 extensions: new Dictionary<string, object?>
                 {
-                    {"tradeId", Activity.Current?.Id },
+                    {"traceId", Activity.Current?.Id },
                     {"message", exception?.Message }
                 }
             )

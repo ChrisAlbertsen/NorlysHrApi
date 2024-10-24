@@ -4,17 +4,19 @@ using HrApi.Models;
 using System.Data.SqlClient;
 using HrApi.Factories.Interfaces;
 using HrApi.Services.Interfaces;
+using Microsoft.AspNetCore.Routing.Template;
+using System.Diagnostics.Tracing;
 
 namespace HrApi.Services
 
 {
-    public class EmployeeService : IEmployeeService
+    public class EmployeeRepository : IEmployeeRepository
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
-        public EmployeeService(ISqlConnectionFactory connectionFactory)
+        public EmployeeRepository(ISqlConnectionFactory connectionFactory)
         {
-            _sqlConnectionFactory = connectionFactory;z
+            _sqlConnectionFactory = connectionFactory;
         }
 
         public async Task<Employee> CreateEmployee(Employee employee, CancellationToken cancellationToken = default)
@@ -35,17 +37,8 @@ namespace HrApi.Services
             using SqlConnection connection = await _sqlConnectionFactory.GetDefaultConnection();
             string query = "SELECT * FROM employeeMgmt.EMPLOYEE WHERE 1 = 1";
             DynamicParameters parameters = new DynamicParameters();
-            if (!string.IsNullOrEmpty(firstName))
-            {
-                query += " AND FirstName LIKE '%' + @FirstName + '%'";
-            parameters.Add("@FirstName", firstName);
-            }
-
-            if (!string.IsNullOrEmpty(lastName))
-            {
-                query += " AND LastName LIKE '%' + @LastName + '%'";
-                parameters.Add("@LastName", lastName);
-            }
+            AddConditionIfNotEmpty("FirstName", firstName, parameters, ref query);
+            AddConditionIfNotEmpty("LastName", lastName, parameters, ref query);
 
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -69,6 +62,15 @@ namespace HrApi.Services
             using SqlConnection connection = await _sqlConnectionFactory.GetDefaultConnection();
             int rowsAffected = await connection.ExecuteAsync("DELETE FROM employeeMgmt.EMPLOYEE WHERE EmployeeId = @EmployeeId", new { EmployeeId = employeeId });
             return rowsAffected;
+        }
+
+        void AddConditionIfNotEmpty(string fieldName, string? value, DynamicParameters parameters, ref string query)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                query += $" AND {fieldName} LIKE '%' + @{fieldName} + '%'";
+                parameters.Add($"@{fieldName}", value);
+            }
         }
     }
 }

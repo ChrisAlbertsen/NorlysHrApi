@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HrApi.Controllers
 {
-    [Route("Employee/")]
+    [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        private readonly IEmployeeService _employeeService;
+        private readonly IEmployeeRepository _employeeService;
 
-        public EmployeeController(IEmployeeService employeeService)
+        public EmployeeController(IEmployeeRepository employeeService)
         {
             _employeeService = employeeService;
         }

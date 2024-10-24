@@ -2,7 +2,7 @@
 
 namespace HrApi.Services.Interfaces;
 
-public interface IEmployeeService
+public interface IEmployeeRepository
 {
     Task<Employee> CreateEmployee(Employee employee, CancellationToken cancellationToken);
     Task<IEnumerable<Employee>> ReadEmployee(string? firstName, string? lastName, CancellationToken cancellationToken);
